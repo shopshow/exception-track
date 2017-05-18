@@ -17,8 +17,9 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", 'MIT-LICENSE', 'README.md']
 
   s.add_dependency 'rails', '>= 4.0', '< 5.2'
-  s.add_dependency 'exception_notification', '~> 4'
-  s.add_dependency 'will_paginate'
+  s.add_dependency 'exception_notification', '~> 4.2.1'
+  s.add_dependency 'will_paginate', '~> 3.1.0'
+  s.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'
 
   s.add_development_dependency 'mysql2'
 end

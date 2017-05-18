@@ -5,17 +5,24 @@ module ExceptionNotifier
     end
 
     def call(exception, _options = {})
-      # send the notification
-      @title = exception.message
+      data =_options[:env]["exception_notifier.exception_data"] rescue nil
       messages = []
+      @title = exception.message
+
       messages << exception.inspect
       messages << "\n"
       messages << "--------------------------------------------------"
-      messages << headers_for_env(_options[:env])
+      messages << headers_for_env(_options)
       messages << "--------------------------------------------------"
+
       unless exception.backtrace.blank?
         messages << "\n"
         messages << exception.backtrace
+      end
+
+      if data
+        messages << "\nData: --------------------------------------------------"
+        messages << data.inspect
       end
 
       if ExceptionTrack.config.enabled_env?(Rails.env)
@@ -26,16 +33,21 @@ module ExceptionNotifier
     end
 
     # Log Request headers from Rack env
-    def headers_for_env(env)
-      return '' if env.blank?
-
+    def headers_for_env(options)
       headers = []
-      headers << "Method:     #{env['REQUEST_METHOD']}"
-      headers << "URL:        #{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{env['REQUEST_URI']}"
-      headers << "User-Agent: #{env['HTTP_USER_AGENT']}"
-      headers << "Language:   #{env['HTTP_ACCEPT_LANGUAGE']}"
-      headers << "Server:     #{Socket.gethostname}"
-      headers << "Process:    #{$$}"
+      headers << "Timestamp:          #{Time.current}"
+
+      if env = options[:env]
+        request = ActionDispatch::Request.new(env)
+        headers << "URL:                #{request.original_url}"
+        headers << "HTTP Method:        #{request.method}"
+        headers << "IP Address:         #{request.remote_ip}"
+        headers << "Parameters:         #{request.filtered_parameters}"
+      end
+
+      headers << "Server:             #{Socket.gethostname}"
+      headers << "Rails root:         #{Rails.root}"
+      headers << "Process:            #{$$}"
 
       headers.join("\n")
     end
