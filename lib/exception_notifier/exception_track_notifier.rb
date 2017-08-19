@@ -42,6 +42,7 @@ module ExceptionNotifier
         headers << "URL:                #{request.original_url}"
         headers << "HTTP Method:        #{request.method}"
         headers << "IP Address:         #{request.remote_ip}"
+        headers << "User-Agent:         #{request.user_agent}"
         headers << "Parameters:         #{request.filtered_parameters}"
       end
 
