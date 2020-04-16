@@ -5,7 +5,8 @@ module ExceptionNotifier
     end
 
     def call(exception, _options = {})
-      data =_options[:env]["exception_notifier.exception_data"] rescue nil
+      data = _options[:data]
+      data ||= _options[:env]["exception_notifier.exception_data"] rescue nil
       messages = []
       @title = exception.message
 
