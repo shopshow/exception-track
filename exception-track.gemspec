@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '>= 4.0'
   s.add_dependency 'exception_notification', '~> 4.2.1'
-  s.add_dependency 'will_paginate', '~> 3.1.0'
+  s.add_dependency 'will_paginate', '>= 3.1.0'
   s.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'
 
   s.add_development_dependency 'mysql2'
